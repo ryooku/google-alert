@@ -15,13 +15,13 @@ function sendSEONews() {
 
   if (items.length < 1) return;
 
-  var message = "(*)本日のSEOニュース(*)\n\n";
+  var message = "";
   for(var i = 0; i < items.length; i++) {
     var link = items[i].getChild('link', atom).getAttribute('href').getValue();
     var title = items[i].getChild('title', atom).getText();
     var content = items[i].getChild('content', atom).getText();
-    message +=  "------------------------------\n" + title + "\n" + content + "\n" + link + "\n";
-  }
+    message +=  title + "\n" + content + "\n" + link + "\n";
 
-  sendChatworkMessage(message);
+    sendChatworkMessage(message);
+  }
 }

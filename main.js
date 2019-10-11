@@ -15,8 +15,8 @@ function sendSEONews() {
 
   if (items.length < 1) return;
 
-  var message = "";
   for(var i = 0; i < items.length; i++) {
+    var message = "";
     var link = items[i].getChild('link', atom).getAttribute('href').getValue();
     var title = items[i].getChild('title', atom).getText();
     var content = items[i].getChild('content', atom).getText();

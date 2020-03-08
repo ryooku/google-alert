@@ -1,8 +1,27 @@
-function testBot() {
-  var client = ChatWorkClient.factory({token:"e3b36529a7391fc252a209a3603ca111"});
+function sendChatworkMessage(message) {
+  var properties = PropertiesService.getScriptProperties();
+  var client = ChatWorkClient.factory({token: properties.getProperty('CW_TOKEN')});
   client.sendMessage({
-    room_id: 127063991,
-    body: "[info][title]タイトルです[/title]ここにメッセージを書けます[/info]"
+    room_id: properties.getProperty('CW_ROOM_ID'),
+    body: "[info]" + message + "[/info]"
   });
 }
 
+function sendSEONews() {
+  var properties = PropertiesService.getScriptProperties();
+  var atom = XmlService.getNamespace('http://www.w3.org/2005/Atom');
+  var document = XmlService.parse(UrlFetchApp.fetch(properties.getProperty('FEED_URI')).getContentText());
+  var items = document.getRootElement().getChildren('entry', atom);
+
+  if (items.length < 1) return;
+
+  for(var i = 0; i < items.length; i++) {
+    var message = "";
+    var link = items[i].getChild('link', atom).getAttribute('href').getValue();
+    var title = items[i].getChild('title', atom).getText();
+    var content = items[i].getChild('content', atom).getText();
+    message +=  title + "\n" + content + "\n" + link + "\n";
+
+    sendChatworkMessage(message);
+  }
+}
